@@ -1,6 +1,5 @@
 package com.codeguardian.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,8 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "submissions")
-public class Submission {
+@Table(name = "announcements")
+public class Announcement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,23 +24,11 @@ public class Submission {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String language;
-
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String code;
-
-    @Column(columnDefinition = "TEXT")
-    private String output;
-
-    @Column(columnDefinition = "TEXT")
-    private String error;
+    private String message;
 
     @Column(nullable = false)
-    private String status; // PENDING, COMPLETED, FAILED
-
-    @Column
-    private Double similarityScore;
+    private boolean active = true;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -88,7 +88,8 @@ const SubmissionHistory: React.FC = () => {
                                 ) : (
                                     submissions.map((sub) => {
                                         const { date, time } = formatDate(sub.createdAt);
-                                        const similarity = sub.status === 'COMPLETED' ? "12%" : "Pending...";
+                                        const similarity = sub.status === 'COMPLETED' ? `${(sub.similarityScore || 0).toFixed(1)}%` : "Pending...";
+                                        const riskPercent = sub.similarityScore || 0;
                                         return (
                                             <tr key={sub.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                                                 <td className="px-6 py-4">
@@ -112,11 +113,13 @@ const SubmissionHistory: React.FC = () => {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center space-x-2">
-                                                        <span className="text-xs font-bold text-emerald-500">{similarity}</span>
+                                                        <span className={`text-xs font-bold ${riskPercent > 70 ? 'text-red-500' : riskPercent > 40 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                                                            {similarity}
+                                                        </span>
                                                         <div className="w-12 h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                                             <div 
-                                                                className="h-full bg-emerald-500 transition-all duration-1000" 
-                                                                style={{ width: sub.status === 'COMPLETED' ? '12%' : '0%' }} 
+                                                                className={`h-full transition-all duration-1000 ${riskPercent > 70 ? 'bg-red-500' : riskPercent > 40 ? 'bg-amber-500' : 'bg-emerald-500'}`} 
+                                                                style={{ width: sub.status === 'COMPLETED' ? `${riskPercent}%` : '0%' }} 
                                                             />
                                                         </div>
                                                     </div>

@@ -3,9 +3,12 @@ C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\model\Similarity.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\security\SecurityConfig.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\controller\AdminAnalyticsController.java
+C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\controller\ChatBotController.java
+C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\controller\AnnouncementController.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\repository\SimilarityRepository.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\engine\ExecutionService.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\impl\SubmissionServiceImpl.java
+C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\model\Announcement.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\payload\LoginDto.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\security\CustomUserDetailsService.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\impl\AuthServiceImpl.java
@@ -14,10 +17,12 @@ C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\model\Role.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\SubmissionService.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\payload\ExecutionResponseDto.java
+C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\AnnouncementService.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\model\User.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\engine\PreprocessingService.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\security\JwtAuthenticationEntryPoint.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\engine\SimilarityEngineService.java
+C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\repository\AnnouncementRepository.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\service\AIService.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\config\DataLoader.java
 C:\Users\pthri\OneDrive\Desktop\My Files\Final Year Project Capstone\Project 1.1\Project\Backend\src\main\java\com\codeguardian\security\JwtTokenProvider.java

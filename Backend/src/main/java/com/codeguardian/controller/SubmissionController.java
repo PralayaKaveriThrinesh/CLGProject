@@ -22,21 +22,42 @@ public class SubmissionController {
     }
 
     @PostMapping("/submissions")
-    public ResponseEntity<Submission> submitCode(@RequestBody SubmissionDto submissionDto, Authentication authentication) {
-        String email = authentication.getName();
-        Submission saved = submissionService.submitCode(submissionDto, email);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<?> submitCode(@RequestBody SubmissionDto submissionDto, Authentication authentication) {
+        try {
+            String email;
+            if (authentication == null) {
+                System.out.println("No authentication found, processing as Guest");
+                email = "guest@codeguardian.com"; // Fallback for demo/guest mode
+            } else {
+                email = authentication.getName();
+                System.out.println("Processing submission for user: " + email);
+            }
+            Submission saved = submissionService.submitCode(submissionDto, email);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        } catch (Exception e) {
+            System.err.println("Submission Error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/submissions/my")
     public ResponseEntity<List<Submission>> getMySubmissions(Authentication authentication) {
-        String email = authentication.getName();
+        String email;
+        if (authentication == null) {
+            System.out.println("No authentication found for history retrieval, using guest fallback");
+            email = "guest@codeguardian.com";
+        } else {
+            email = authentication.getName();
+        }
         return ResponseEntity.ok(submissionService.getMySubmissions(email));
     }
 
     @GetMapping("/submissions/{id}")
     public ResponseEntity<Submission> getSubmissionById(@PathVariable Long id) {
-        return ResponseEntity.ok(submissionService.getSubmissionById(id));
+        Submission submission = submissionService.getSubmissionById(id);
+        System.out.println("Fetching submission #" + id + " - Code length: " + (submission.getCode() != null ? submission.getCode().length() : "NULL"));
+        return ResponseEntity.ok(submission);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

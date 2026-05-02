@@ -52,4 +52,9 @@ public class AdminAnalyticsController {
     public ResponseEntity<List<Similarity>> getSimilarityMatrix() {
         return ResponseEntity.ok(similarityRepository.findAll());
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<com.codeguardian.model.User>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
 }

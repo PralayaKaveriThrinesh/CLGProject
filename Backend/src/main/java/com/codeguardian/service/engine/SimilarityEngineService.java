@@ -34,6 +34,8 @@ public class SimilarityEngineService {
         List<String> newTokens = preprocessingService.tokenize(newSubmission.getCode());
         CompilationUnit newAST = preprocessingService.generateAST(newSubmission.getCode());
 
+        double maxScore = 0.0;
+
         for (Submission past : previousSubmissions) {
             if (past.getId().equals(newSubmission.getId())) continue;
 
@@ -47,6 +49,10 @@ public class SimilarityEngineService {
             // Final Score = (Token * 0.3) + (AST * 0.5) + (Logic * 0.2)
             double finalScore = (tokenScore * 0.3) + (astScore * 0.5) + (logicScore * 0.2);
 
+            if (finalScore > maxScore) {
+                maxScore = finalScore;
+            }
+
             Similarity similarity = new Similarity();
             similarity.setSubmissionA(newSubmission.getId());
             similarity.setSubmissionB(past.getId());
@@ -55,6 +61,7 @@ public class SimilarityEngineService {
             similarityRepository.save(similarity);
         }
         
+        newSubmission.setSimilarityScore(maxScore * 100); // Store as percentage
         newSubmission.setStatus("COMPLETED");
         submissionRepository.save(newSubmission);
     }

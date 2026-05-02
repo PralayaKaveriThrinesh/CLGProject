@@ -71,19 +71,19 @@ const AdminDashboard: React.FC = () => {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">System Analytics</h1>
-                <p className="text-slate-500 mt-1">Global submission trends and plagiarism statistics.</p>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-white transition-colors">System Analytics</h1>
+                <p className="text-slate-500 dark:text-slate-400 mt-1 transition-colors">Global submission trends and plagiarism statistics.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat) => (
                     <Card key={stat.label} className="p-4 flex items-center space-x-4">
-                        <div className={`p-3 rounded-lg bg-khaki-100 ${stat.color}`}>
+                        <div className={`p-3 rounded-lg bg-khaki-100 dark:bg-slate-800 ${stat.color} transition-colors`}>
                             <stat.icon className="w-6 h-6" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500">{stat.label}</p>
-                            <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 transition-colors">{stat.label}</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white transition-colors">{stat.value}</p>
                         </div>
                     </Card>
                 ))}

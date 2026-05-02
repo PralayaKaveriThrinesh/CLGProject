@@ -105,6 +105,7 @@ const Login: React.FC = () => {
               type="text"
               id="signup-name"
               placeholder="Full Name"
+              autoComplete="off"
               value={signUpName}
               onChange={(e) => setSignUpName(e.target.value)}
               required

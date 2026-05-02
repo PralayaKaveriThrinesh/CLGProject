@@ -55,6 +55,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/execute", "/api/execute/**", "/error").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/analysis/**").permitAll()
+                .requestMatchers("/api/chatbot/**").permitAll()
+                .requestMatchers("/api/submissions", "/api/submissions/**").permitAll()
+                .requestMatchers("/api/announcements/latest").permitAll()
                 .anyRequest().authenticated()
             );
 

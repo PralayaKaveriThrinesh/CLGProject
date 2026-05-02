@@ -97,6 +97,7 @@ const CodeIDE: React.FC = () => {
     });
     const [theme, setEditorTheme] = useState('vs-dark');
     const { theme: globalTheme } = useTheme();
+    const [isBeautifying, setIsBeautifying] = useState(false);
     const monaco = useMonaco();
     const editorRef = useRef<any>(null);
     const terminalEndRef = useRef<HTMLDivElement>(null);
@@ -197,9 +198,50 @@ const CodeIDE: React.FC = () => {
         addLog('info', 'Process terminated.');
     };
 
-    const handleBeautify = () => {
-        if (editorRef.current) {
-            editorRef.current.getAction('editor.action.formatDocument').run();
+    const handleBeautify = async () => {
+        if (!code.trim()) {
+            toast.info("Please write some code first.");
+            return;
+        }
+
+        setIsBeautifying(true);
+        const beautifyToastId = "beautify-toast";
+        // Dismiss all previous toasts to ensure only one message is visible at a time
+        toast.dismiss();
+        toast.loading("AI is beautifying your code...", { toastId: beautifyToastId });
+
+        try {
+            const response = await axios.post(
+                `http://localhost:8081/api/analysis/beautify`,
+                { code, language }
+            );
+
+            const beautifiedCode = response.data.beautifiedCode;
+
+            if (beautifiedCode && !beautifiedCode.includes("AI Beautify Error")) {
+                // Remove potential markdown code blocks if AI ignored the instruction
+                const cleanedCode = beautifiedCode.replace(/```[a-z]*\n?|```/gi, '').trim();
+                setCode(cleanedCode);
+                toast.update(beautifyToastId, { 
+                    render: "Code beautified successfully!", 
+                    type: "success", 
+                    isLoading: false, 
+                    autoClose: 3000 
+                });
+            } else {
+                throw new Error(beautifiedCode || "No response from AI");
+            }
+        } catch (error: any) {
+            console.error("Beautify Error:", error);
+            const errorMessage = error.response?.data?.beautifiedCode || error.message;
+            toast.update(beautifyToastId, { 
+                render: errorMessage.includes("429") ? "AI is busy (Rate Limit). Please wait a moment." : "Failed to beautify code. " + errorMessage, 
+                type: "error", 
+                isLoading: false, 
+                autoClose: 5000 
+            });
+        } finally {
+            setIsBeautifying(false);
         }
     };
 
@@ -258,6 +300,8 @@ const CodeIDE: React.FC = () => {
 
         setIsAnalyzing(true);
         setAnalysisStep(0);
+        // Ensure only one message is visible
+        toast.dismiss();
         setConsoleLogs([`[SYSTEM] Connecting to CodeGuardian Analysis Pipeline...`]);
         
         try {
@@ -290,8 +334,9 @@ const CodeIDE: React.FC = () => {
 
         } catch (error: any) {
             setIsAnalyzing(false);
-            addLog(`[ERROR] Submission failed: ${error.response?.data?.message || error.message}`);
-            toast.error("Submission failed. Please check your connection.");
+            const errorMsg = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response.data : error.message);
+            addLog(`[ERROR] Submission failed: ${errorMsg}`);
+            toast.error(`Submission failed: ${errorMsg}`, { toastId: 'submit-error' });
         }
     };
 
@@ -447,13 +492,19 @@ const CodeIDE: React.FC = () => {
 
     return (
         <div className="h-[calc(100vh-120px)] flex flex-col space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <ToastContainer theme="colored" icon={false} hideProgressBar={true} />
+            <ToastContainer 
+                theme="colored" 
+                icon={false} 
+                hideProgressBar={true} 
+                limit={1} 
+                position="top-center"
+            />
             
             {/* Optimized Header / Toolbar */}
-            <div className="flex flex-wrap items-center justify-between bg-white dark:bg-slate-900 p-2 rounded-lg border border-khaki-200 dark:border-slate-800 shadow-sm glass">
+            <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-2 sm:p-3 rounded-xl border border-khaki-200 dark:border-slate-800 shadow-md overflow-x-auto no-scrollbar">
                 <div className="flex items-center space-x-2 px-2 min-w-max">
                     <Code2 className="text-primary-500 w-5 h-5" />
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">CodeGuardian IDE</span>
+                    <span className="hidden sm:inline text-sm font-bold text-slate-900 dark:text-white">CodeGuardian IDE</span>
                     
                     <select 
                         value={language}
@@ -501,37 +552,37 @@ const CodeIDE: React.FC = () => {
                         <option value="html">HTML/CSS/JS</option>
                     </select>
 
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ml-2 ${
-                        submissionCount >= 3 ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'
-                    }`}>
-                        {submissionCount}/3 FREE USES
+                    <span className="hidden lg:inline text-[10px] px-3 py-1 rounded-full font-black ml-4 bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">
+                        PRO PLAN ACTIVATED (UNLIMITED)
                     </span>
                 </div>
 
-                <div className="flex items-center space-x-1.5 mt-2 sm:mt-0">
-                    <Button variant="outline" size="sm" onClick={handleRun} disabled={isRunning} className="h-8 px-3 border-khaki-200 text-emerald-600 hover:bg-emerald-50">
-                        {isRunning ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : <Play className="w-3 h-3 mr-1.5" />}
-                        {isRunning ? 'Running...' : 'Run'}
+                <div className="flex items-center space-x-2 sm:space-x-3 px-2 min-w-max">
+                    <Button variant="outline" size="sm" onClick={handleRun} disabled={isRunning} className="h-8 sm:h-9 px-2 sm:px-3 border-khaki-200 text-emerald-600 hover:bg-emerald-50">
+                        {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3 sm:mr-1.5" />}
+                        <span className="hidden sm:inline">{isRunning ? 'Running...' : 'Run'}</span>
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleStop} disabled={!isRunning} className="h-8 px-3 border-khaki-200 text-red-500 hover:bg-red-50">
-                        <Square className="w-3 h-3 mr-1.5" /> Stop
-                    </Button>
-                    <Button variant="outline" size="sm" className="h-8 px-3 border-khaki-200 text-indigo-500 hover:bg-indigo-50">
-                        <Bug className="w-3 h-3 mr-1.5" /> Debug
+                    <Button variant="outline" size="sm" onClick={handleStop} disabled={!isRunning} className="h-8 sm:h-9 px-2 sm:px-3 border-khaki-200 text-red-500 hover:bg-red-50">
+                        <Square className="w-3 h-3 sm:mr-1.5" /> <span className="hidden sm:inline">Stop</span>
                     </Button>
                     
-                    <div className="w-px h-6 bg-khaki-200 dark:bg-slate-700 mx-1" />
+                    <div className="hidden sm:block w-px h-6 bg-khaki-200 dark:bg-slate-700 mx-1" />
                     
-                    <button onClick={handleBeautify} className="p-1.5 text-slate-500 hover:text-primary-500 transition-colors" title="Beautify">
-                        <Wand2 className="w-4 h-4" />
+                    <button 
+                        onClick={handleBeautify} 
+                        disabled={isBeautifying}
+                        className={`p-1.5 transition-colors ${isBeautifying ? 'text-primary-500 animate-pulse' : 'text-slate-500 hover:text-primary-500'}`} 
+                        title="AI Beautify (Pro)"
+                    >
+                        {isBeautifying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
                     </button>
-                    <button onClick={handleSave} className="p-1.5 text-slate-500 hover:text-primary-500 transition-colors" title="Save">
+                    <button onClick={handleSave} className="hidden sm:block p-1.5 text-slate-500 hover:text-primary-500 transition-colors" title="Save">
                         <Save className="w-4 h-4" />
                     </button>
                     <button onClick={handleShare} className="p-1.5 text-slate-500 hover:text-primary-500 transition-colors" title="Share">
                         <Share2 className="w-4 h-4" />
                     </button>
-                    <button onClick={handleDownload} className="p-1.5 text-slate-500 hover:text-primary-500 transition-colors" title="Download">
+                    <button onClick={handleDownload} className="hidden sm:block p-1.5 text-slate-500 hover:text-primary-500 transition-colors" title="Download">
                         <Download className="w-4 h-4" />
                     </button>
 
@@ -547,16 +598,16 @@ const CodeIDE: React.FC = () => {
 
                     <div className="w-px h-6 bg-khaki-200 dark:bg-slate-700 mx-1" />
                     
-                    <Button size="sm" onClick={handleSubmit} isLoading={isAnalyzing} className="h-8 px-4 bg-primary-600 hover:bg-primary-700 text-white ml-2">
-                        <Send className="w-3.5 h-3.5 mr-1.5" /> Submit
+                    <Button size="sm" onClick={handleSubmit} isLoading={isAnalyzing} className="h-8 sm:h-9 px-3 sm:px-6 bg-primary-600 hover:bg-primary-700 text-white ml-2 sm:ml-4 shadow-lg shadow-primary-500/20">
+                        <Send className="w-3.5 h-3.5 sm:mr-1.5" /> <span className="hidden sm:inline">Submit</span>
                     </Button>
                 </div>
             </div>
 
             {/* Main IDE Area */}
-            <div className="flex-1 flex overflow-hidden border border-khaki-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-md">
-                {/* Optimized Sidebar */}
-                <div className="hidden sm:flex w-56 bg-khaki-50 dark:bg-slate-950 border-r border-khaki-200 dark:border-slate-800 flex-col">
+            <div className="flex-1 flex flex-col lg:flex-row overflow-hidden border border-khaki-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-md">
+                {/* Optimized Sidebar - Visible only on large screens */}
+                <div className="hidden lg:flex w-56 bg-khaki-50 dark:bg-slate-950 border-r border-khaki-200 dark:border-slate-800 flex-col">
                     <div className="p-3 flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-khaki-200 dark:border-slate-800">
                         <span>Explorer</span>
                         <div className="flex items-center space-x-2">
@@ -679,7 +730,7 @@ const CodeIDE: React.FC = () => {
             </div>
 
             {/* Unified Console Area */}
-            <div className="flex-1 min-h-[250px] bg-slate-950 border border-slate-800 rounded-xl flex flex-col shadow-2xl overflow-hidden font-mono mt-4">
+            <div className="h-[300px] lg:flex-1 lg:min-h-[250px] bg-slate-950 border border-slate-800 rounded-xl flex flex-col shadow-2xl overflow-hidden font-mono mt-3 lg:mt-4 shrink-0 lg:shrink">
                 <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900">
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2">

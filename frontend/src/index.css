@@ -19,3 +19,46 @@ body {
 #root {
   width: 100%;
 }
+
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
+    font-size: 16px;
+  }
+  
+  @screen sm {
+    html { font-size: 16px; }
+  }
+  
+  @screen md {
+    html { font-size: 16px; }
+  }
+  
+  body {
+    @apply bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .responsive-container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px];
+  }
+  
+  .glass {
+    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/20 dark:border-slate-800/50;
+  }
+}
+
+/* Custom scrollbar for better mobile/desktop feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors;
+}

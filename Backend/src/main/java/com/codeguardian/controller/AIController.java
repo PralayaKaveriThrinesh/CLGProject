@@ -24,4 +24,14 @@ public class AIController {
         response.put("suggestions", suggestions);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/beautify")
+    public ResponseEntity<Map<String, String>> beautifyCode(@RequestBody Map<String, String> request) {
+        String code = request.get("code");
+        String language = request.get("language");
+        String beautified = aiService.beautifyCode(code, language);
+        Map<String, String> response = new HashMap<>();
+        response.put("beautifiedCode", beautified);
+        return ResponseEntity.ok(response);
+    }
 }

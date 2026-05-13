@@ -13,6 +13,7 @@ import {
 
 import { useAuth } from '../../context/AuthContext';
 
+
 interface SidebarProps {
   role: 'student' | 'admin';
 }
@@ -35,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role: roleProp }) => {
 
   return (
     <aside className="w-64 h-full border-r border-khaki-200 dark:border-slate-800 bg-white dark:bg-[#0a0f1c] flex flex-col shadow-sm transition-colors z-40">
-      <div className="pt-8" /> {/* Clean spacer at top */}
+      <div className="pt-6" />
 
       <nav className="flex-1 px-4 space-y-1">
         {links.map((link) => (

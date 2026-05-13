@@ -37,12 +37,12 @@ const Navbar: React.FC = () => {
     <nav className="sticky top-0 w-full z-50 border-b border-khaki-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900 transition-all shadow-sm">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="h-12 w-12 overflow-hidden rounded-xl shadow-md border border-slate-200 dark:border-slate-800 transition-transform group-hover:scale-110">
-              <img src={logo} alt="CodeGuardian Logo" className="h-full w-full object-cover" />
+          <Link to="/" className="flex items-center group space-x-3">
+            <div className="h-12 w-12 rounded-full overflow-hidden ring-2 ring-cyan-400/60 shadow-lg shadow-cyan-500/30 transition-transform group-hover:scale-110">
+              <img src={logo} alt="CodeGuardian Logo" className="h-full w-full object-cover object-center" />
             </div>
-            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter uppercase whitespace-nowrap">
-              Code<span className="text-primary-500">Guardian</span>
+            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter uppercase hidden sm:block">
+              Code<span className="text-[#0ea5e9]">Guardian</span>
             </span>
           </Link>
 

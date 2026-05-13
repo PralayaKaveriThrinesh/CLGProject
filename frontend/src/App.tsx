@@ -13,6 +13,15 @@ import CodeAnalysis from './pages/CodeAnalysis';
 
 import { AuthProvider } from './context/AuthContext';
 
+/**
+ * MAIN FRONTEND ROUTING HUB
+ * This file acts as the "Map" for the entire website.
+ * 
+ * THEORY:
+ * 1. <AuthProvider>: This component remembers if a user is logged in as a student or admin.
+ * 2. <Router> & <Routes>: These listen to the website URL and decide which page to display.
+ * 3. <DashboardLayout>: This is a wrapper that provides the sidebar and navigation for the dashboards.
+ */
 function App() {
   return (
     <AuthProvider>

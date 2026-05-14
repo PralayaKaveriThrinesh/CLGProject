@@ -3,7 +3,7 @@ import { FileCode, Search, Filter, ChevronRight, Eye, Loader2 } from 'lucide-rea
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-import axios from 'axios';
+import api from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 const SubmissionHistory: React.FC = () => {
@@ -19,9 +19,7 @@ const SubmissionHistory: React.FC = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('user_token');
-            const response = await axios.get('http://localhost:8081/api/submissions/my', {
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-            });
+            const response = await api.get('/submissions/my');
             setSubmissions(response.data);
         } catch (error) {
             console.error("Failed to fetch history", error);

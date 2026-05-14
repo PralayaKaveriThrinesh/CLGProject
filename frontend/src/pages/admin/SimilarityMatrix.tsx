@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios';
 import Card from '../../components/common/Card';
 import { ShieldAlert, Info, Loader2 } from 'lucide-react';
 
@@ -33,17 +33,10 @@ const PlagiarismMatrix: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('user_token');
                 const [matrixRes, allRes, usersRes] = await Promise.all([
-                    axios.get('http://localhost:8081/api/admin/similarity-matrix', {
-                        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                    }),
-                    axios.get('http://localhost:8081/api/admin/submissions', {
-                        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                    }),
-                    axios.get('http://localhost:8081/api/admin/users', {
-                        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                    })
+                    api.get('/admin/similarity-matrix'),
+                    api.get('/admin/submissions'),
+                    api.get('/admin/users')
                 ]);
                 console.log("Admin Submissions Response:", allRes.data);
                 console.log("Admin Users Response:", usersRes.data);

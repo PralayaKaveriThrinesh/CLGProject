@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { 
   FileCode, 
@@ -24,13 +24,10 @@ const StudentDashboard: React.FC = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const token = localStorage.getItem('user_token');
-                const subResponse = await axios.get('http://localhost:8081/api/submissions/my', {
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                });
+                const subResponse = await api.get('/submissions/my');
                 setSubmissions(subResponse.data);
 
-                const annResponse = await axios.get('http://localhost:8081/api/announcements/latest');
+                const annResponse = await api.get('/announcements/latest');
                 if (annResponse.status === 200) {
                     setAnnouncement(annResponse.data);
                 }

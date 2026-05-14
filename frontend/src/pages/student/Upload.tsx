@@ -25,7 +25,7 @@ import {
     X,
     Globe
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -160,7 +160,7 @@ const CodeIDE: React.FC = () => {
             // Get token if available
             const token = localStorage.getItem('user_token');
             
-            const response = await axios.post('http://localhost:8081/api/execute', 
+            const response = await api.post('/execute', 
                 { language, code, input: stdin } 
             );
 
@@ -211,8 +211,8 @@ const CodeIDE: React.FC = () => {
         toast.loading("AI is beautifying your code...", { toastId: beautifyToastId });
 
         try {
-            const response = await axios.post(
-                `http://localhost:8081/api/analysis/beautify`,
+            const response = await api.post(
+                `/analysis/beautify`,
                 { code, language }
             );
 
@@ -307,11 +307,8 @@ const CodeIDE: React.FC = () => {
         try {
             const token = localStorage.getItem('user_token');
             // Real Submission
-            const response = await axios.post('http://localhost:8081/api/submissions', 
-                { language, code },
-                {
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                }
+            const response = await api.post('/submissions', 
+                { language, code }
             );
             
             const submission = response.data;

@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, FileCode, Search, AlertTriangle, ShieldCheck, Zap, Loader2, Download } from 'lucide-react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import axios from 'axios';
+import api from '../api/axios';
 import { jsPDF } from 'jspdf';
 
 const CodeAnalysis: React.FC = () => {
@@ -27,9 +27,7 @@ const CodeAnalysis: React.FC = () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('user_token');
-            const response = await axios.get(`http://localhost:8081/api/submissions/${id}`, {
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-            });
+            const response = await api.get(`/submissions/${id}`);
             console.log("Submission API Response:", response.data);
             setSubmission(response.data);
         } catch (error) {
@@ -43,9 +41,7 @@ const CodeAnalysis: React.FC = () => {
         setIsAiLoading(true);
         try {
             const token = localStorage.getItem('user_token');
-            const response = await axios.get(`http://localhost:8081/api/analysis/ai-suggestions/${id}`, {
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-            });
+            const response = await api.get(`/analysis/ai-suggestions/${id}`);
             setAiSuggestions(response.data.suggestions);
         } catch (error) {
             console.error("Failed to fetch AI suggestions", error);

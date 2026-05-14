@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import api from '../../api/axios';
 
 interface Message {
   id: string;
@@ -49,7 +49,7 @@ const ChatBot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8081/api/chatbot/chat', {
+      const response = await api.post('/chatbot/chat', {
         message: input,
       });
 

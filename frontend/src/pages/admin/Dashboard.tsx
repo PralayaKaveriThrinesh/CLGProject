@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios';
 import { 
     Users, 
     FileText, 
@@ -31,7 +31,7 @@ const AdminDashboard: React.FC = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/api/admin/stats');
+                const response = await api.get('/admin/stats');
                 setLiveStats(response.data);
             } catch (error) {
                 console.error("Failed to fetch admin stats", error);

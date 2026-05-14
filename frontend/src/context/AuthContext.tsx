@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 
 interface User {
   email: string;
@@ -40,7 +40,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const decoded = decodeToken(token);
       if (decoded) {
         setUser(decoded);
@@ -48,17 +47,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout();
       }
     } else {
-      delete axios.defaults.headers.common['Authorization'];
       setUser(null);
     }
   }, [token]);
 
   const login = async (credentials: any) => {
-    const response = await axios.post('http://localhost:8081/api/auth/login', credentials);
+    const response = await api.post('/auth/login', credentials);
     const { accessToken } = response.data;
     localStorage.setItem('user_token', accessToken);
     setToken(accessToken);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
     // Decode immediately — don't wait for useEffect re-render
     const decoded = decodeToken(accessToken);
@@ -72,14 +69,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (userData: any) => {
-    await axios.post('http://localhost:8081/api/auth/register', userData);
+    await api.post('/auth/register', userData);
   };
 
   const logout = () => {
     localStorage.removeItem('user_token');
     setToken(null);
     setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
     window.location.href = '/';
   };
 
